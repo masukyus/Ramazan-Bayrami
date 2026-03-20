@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hayırlı Bayramlar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5ead6;
+    --sepia: #c8a46e;
+    --brown: #7a4f2d;
+    --darkbrown: #3d2010;
+    --red: #c0392b;
+    --gold: #d4a017;
+    --ink: #2c1a0e;
+    --paper: #ede0c4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Amiri', serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23c8a46e' opacity='0.8'/%3E%3C/svg%3E") 10 10, auto;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── STARS / FIREFLIES ── */
+  .firefly-field {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ff {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe066 0%, transparent 70%);
+    animation: drift linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes drift {
+    0%   { transform: translate(0, 0) scale(1);   opacity: 0; }
+    20%  { opacity: 0.8; }
+    80%  { opacity: 0.6; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.5); opacity: 0; }
+  }
+
+  /* ── MAIN WRAPPER ── */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── DECORATIVE HEADER BORDER ── */
+  .top-border {
+    width: 100%;
+    height: 14px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--red) 0px, var(--red) 18px,
+      var(--gold) 18px, var(--gold) 36px,
+      var(--brown) 36px, var(--brown) 54px,
+      var(--gold) 54px, var(--gold) 72px
+    );
+  }
+
+  /* ── LANTERNS ── */
+  .lantern-row {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 20px 0 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .lantern-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: sway 3s ease-in-out infinite;
+  }
+  .lantern-wrap:nth-child(even) { animation-direction: reverse; animation-duration: 3.5s; }
+  .lantern-wrap:nth-child(3)    { animation-duration: 2.8s; }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-6deg); }
+    50%       { transform: rotate(6deg); }
+  }
+
+  .lantern-string {
+    width: 2px;
+    height: 30px;
+    background: var(--brown);
+  }
+
+  .lantern {
+    width: 36px;
+    height: 56px;
+    border-radius: 50% 50% 40% 40% / 40% 40% 50% 50%;
+    position: relative;
+    box-shadow: 0 0 18px 6px rgba(255,200,60,0.4), inset 0 0 10px rgba(255,220,80,0.3);
+    overflow: hidden;
+  }
+  .lantern::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 10px;
+    border-radius: 0 0 50% 50%;
+    background: inherit;
+    filter: brightness(0.7);
+  }
+
+  .l1 { background: radial-gradient(ellipse at 40% 40%, #ff6b35, #c0392b); }
+  .l2 { background: radial-gradient(ellipse at 40% 40%, #f9ca24, #d4a017); }
+  .l3 { background: radial-gradient(ellipse at 40% 40%, #6ab04c, #1e8449); }
+  .l4 { background: radial-gradient(ellipse at 40% 40%, #a29bfe, #6c3483); }
+  .l5 { background: radial-gradient(ellipse at 40% 40%, #fd79a8, #c0392b); }
+
+  .lantern-glow {
+    position: absolute;
+    inset: 20%;
+    background: rgba(255,240,150,0.5);
+    border-radius: 50%;
+    filter: blur(6px);
+    animation: pulse-glow 1.8s ease-in-out infinite alternate;
+  }
+  @keyframes pulse-glow {
+    from { opacity: 0.4; transform: scale(0.8); }
+    to   { opacity: 1;   transform: scale(1.2); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 24px 20px 10px;
+    max-width: 700px;
+  }
+
+  .arabic-bismillah {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--sepia);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 8vw, 5rem);
+    font-weight: 700;
+    color: var(--brown);
+    line-height: 1.1;
+    text-shadow: 3px 3px 0 rgba(200,164,110,0.3);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+  }
+
+  .title em {
+    color: var(--red);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--brown);
+    margin-top: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .ornament {
+    font-size: 2rem;
+    color: var(--gold);
+    margin: 10px 0;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.1s forwards;
+    letter-spacing: 8px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── VINTAGE CARD ── */
+  .card {
+    background: var(--paper);
+    border: 2px solid var(--sepia);
+    border-radius: 4px;
+    max-width: 600px;
+    width: 90%;
+    padding: 32px 36px;
+    margin: 20px auto;
+    position: relative;
+    box-shadow: 8px 8px 0 rgba(122,79,45,0.2), inset 0 0 60px rgba(200,164,110,0.1);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.4s forwards;
+  }
+
+  .card::before, .card::after {
+    content: '✦';
+    position: absolute;
+    font-size: 1.4rem;
+    color: var(--gold);
+  }
+  .card::before { top: 10px; left: 14px; }
+  .card::after  { bottom: 10px; right: 14px; }
+
+  .card-corners span {
+    position: absolute;
+    font-size: 1.4rem;
+    color: var(--gold);
+  }
+  .card-corners span:nth-child(1) { top: 10px; right: 14px; }
+  .card-corners span:nth-child(2) { bottom: 10px; left: 14px; }
+
+  .card p {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    line-height: 2;
+    text-align: center;
+    color: var(--darkbrown);
+  }
+
+  .card .highlight {
+    color: var(--red);
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  /* ── MEMORY FRAMES ── */
+  .memories-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--brown);
+    text-align: center;
+    margin: 10px 0 24px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.8s forwards;
+  }
+  .memories-title::before, .memories-title::after {
+    content: ' ❦ ';
+    color: var(--gold);
+  }
+
+  .frames {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 760px;
+    padding: 0 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease 2s forwards;
+  }
+
+  .frame {
+    background: var(--paper);
+    border: 3px solid var(--sepia);
+    padding: 16px;
+    width: 200px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 4px 4px 0 rgba(122,79,45,0.25);
+  }
+
+  .frame:hover {
+    transform: rotate(0deg) scale(1.07);
+    box-shadow: 8px 8px 0 rgba(122,79,45,0.35);
+    z-index: 10;
+  }
+
+  .frame:nth-child(1) { transform: rotate(-2.5deg); }
+  .frame:nth-child(2) { transform: rotate(1.5deg); }
+  .frame:nth-child(3) { transform: rotate(-1deg); }
+  .frame:nth-child(4) { transform: rotate(2deg); }
+
+  .frame:nth-child(1):hover { transform: rotate(0) scale(1.07); }
+  .frame:nth-child(2):hover { transform: rotate(0) scale(1.07); }
+  .frame:nth-child(3):hover { transform: rotate(0) scale(1.07); }
+  .frame:nth-child(4):hover { transform: rotate(0) scale(1.07); }
+
+  .frame-img {
+    width: 100%;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    border: 1px solid var(--sepia);
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .frame-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+  }
+
+  /* sepia filter on frames */
+  .frame-img { filter: sepia(0.4) saturate(0.8); }
+  .frame:hover .frame-img { filter: sepia(0) saturate(1.2); transition: filter 0.4s; }
+
+  .frame-bg-1 { background: linear-gradient(135deg, #f0d9b5, #c8a46e); }
+  .frame-bg-2 { background: linear-gradient(135deg, #d4e8d0, #8fb87a); }
+  .frame-bg-3 { background: linear-gradient(135deg, #fbe4c8, #e8935a); }
+  .frame-bg-4 { background: linear-gradient(135deg, #d9e8f5, #7aaccd); }
+
+  .frame-caption {
+    font-size: 0.82rem;
+    color: var(--brown);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .frame-tape {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 18px;
+    background: rgba(255,235,180,0.65);
+    border: 1px solid rgba(200,164,110,0.4);
+    border-radius: 2px;
+    backdrop-filter: blur(2px);
+  }
+
+  /* ── INTERACTIVE CANDY JAR ── */
+  .candy-section {
+    text-align: center;
+    margin: 30px 0;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.2s forwards;
+  }
+
+  .candy-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--brown);
+    margin-bottom: 16px;
+  }
+  .candy-title small {
+    display: block;
+    font-family: 'Amiri', serif;
+    font-size: 0.9rem;
+    color: var(--sepia);
+    font-style: italic;
+  }
+
+  .jar-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .jar-svg {
+    width: 140px;
+    height: 180px;
+    filter: drop-shadow(4px 6px 8px rgba(122,79,45,0.3));
+    transition: transform 0.15s;
+  }
+  .jar-wrapper:active .jar-svg { transform: scale(0.95); }
+
+  .candy-count {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.88rem;
+    color: var(--brown);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  /* ── FLYING CANDY ANIMATION ── */
+  .candy-pop {
+    position: fixed;
+    font-size: 1.8rem;
+    pointer-events: none;
+    z-index: 900;
+    animation: candyFly 1.2s ease-out forwards;
+  }
+  @keyframes candyFly {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--cx), var(--cy)) scale(0.4) rotate(var(--cr)); }
+  }
+
+  /* ── GREETING BUTTON ── */
+  .greet-section {
+    margin: 40px 0 20px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.5s forwards;
+  }
+
+  .greet-btn {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--cream);
+    background: var(--brown);
+    border: none;
+    padding: 14px 38px;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0 var(--darkbrown);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .greet-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  }
+  .greet-btn:hover  { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--darkbrown); }
+  .greet-btn:active { transform: translate(2px, 2px);   box-shadow: 2px 2px 0 var(--darkbrown); }
+
+  /* ── MODAL / GREETING OVERLAY ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(45,20,8,0.75);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    border: 3px double var(--sepia);
+    max-width: 480px;
+    width: 90%;
+    padding: 40px 32px;
+    position: relative;
+    text-align: center;
+    box-shadow: 12px 12px 0 rgba(45,20,8,0.4);
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.6) rotate(-3deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    background: none; border: none;
+    font-size: 1.4rem; cursor: pointer;
+    color: var(--brown);
+    line-height: 1;
+  }
+
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+
+  .modal p {
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--darkbrown);
+  }
+
+  .modal .big-emoji { font-size: 3rem; margin: 10px 0; }
+  .modal .divider { color: var(--gold); font-size: 1.2rem; letter-spacing: 6px; margin: 10px 0; }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    z-index: 600;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--cfx), 100vh) rotate(var(--cfr)); opacity: 0; }
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: auto;
+    padding: 24px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--sepia);
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.8s forwards;
+  }
+
+  .footer-divider {
+    width: 180px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sepia), transparent);
+    margin: 8px auto;
+  }
+
+  /* ── MOON ── */
+  .moon {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #fff9d6, #f0c040);
+    box-shadow: 0 0 30px 10px rgba(240,192,64,0.3), 0 0 60px 20px rgba(240,192,64,0.1);
+    animation: moonGlow 4s ease-in-out infinite alternate;
+    z-index: 2;
+  }
+  .moon::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 14px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(200,160,30,0.25);
+  }
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 28px; left: 30px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(200,160,30,0.2);
+  }
+  @keyframes moonGlow {
+    from { box-shadow: 0 0 30px 10px rgba(240,192,64,0.3), 0 0 60px 20px rgba(240,192,64,0.1); }
+    to   { box-shadow: 0 0 50px 18px rgba(240,192,64,0.5), 0 0 90px 35px rgba(240,192,64,0.2); }
+  }
+
+  /* ── STAR (crescent) near moon ── */
+  .crescent {
+    position: fixed;
+    top: 22px;
+    right: 108px;
+    font-size: 2rem;
+    color: #f0c040;
+    filter: drop-shadow(0 0 6px rgba(240,192,64,0.6));
+    z-index: 2;
+    animation: moonGlow 3s ease-in-out infinite alternate;
+  }
+
+  /* ── SCROLL indicator ── */
+  .scroll-hint {
+    font-size: 0.78rem;
+    color: var(--sepia);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    animation: bounce 2s ease infinite;
+    margin: 8px 0 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease 3s forwards, bounce 2s ease 3.5s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(6px); }
+  }
+
+  /* responsive */
+  @media (max-width: 480px) {
+    .frames { gap: 14px; }
+    .frame  { width: 155px; }
+    .moon   { width: 50px; height: 50px; top: 12px; right: 14px; }
+    .crescent { right: 72px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Moon -->
+<div class="moon"></div>
+<div class="crescent">☽</div>
+
+<!-- Fireflies -->
+<div class="firefly-field" id="ffField"></div>
+
+<!-- Top border -->
+<div class="top-border"></div>
+
+<div class="wrapper">
+
+  <!-- Lanterns -->
+  <div class="lantern-row">
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l1"><div class="lantern-glow"></div></div></div>
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l2"><div class="lantern-glow"></div></div></div>
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l3"><div class="lantern-glow"></div></div></div>
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l4"><div class="lantern-glow"></div></div></div>
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l5"><div class="lantern-glow"></div></div></div>
+    <div class="lantern-wrap"><div class="lantern-string"></div><div class="lantern l1"><div class="lantern-glow"></div></div></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="arabic-bismillah">بسم الله الرحمن الرحيم</div>
+    <h1 class="title">Hayırlı <em>Bayramlar</em></h1>
+    <p class="subtitle">Ramazan Bayramı — Eski Günler Gibi</p>
+    <div class="ornament">❧ ✦ ❧</div>
+  </div>
+
+  <!-- Vintage card -->
+  <div class="card">
+    <div class="card-corners"><span>✦</span><span>✦</span></div>
+    <p>
+      Kapı çalınır, eller öpülür, bayramlıklar giyilir…<br>
+      Annenin gözlerindeki <span class="highlight">o ışık</span>, babanın sıkı kucağı,<br>
+      dedelerin tebessümü, ninelerin <span class="highlight">lokum kokulu</span> elleri.<br><br>
+      Eski bayramların sıcaklığı hiç solmuyor.<br>
+      <span class="highlight">Geçmişin huzuru</span>, bugünün duasıyla buluşsun.
+    </p>
+  </div>
+
+  <!-- Memory frames -->
+  <h2 class="memories-title">Bayram Anıları</h2>
+
+  <div class="frames">
+    <div class="frame" onclick="showMemory(0)">
+      <div class="frame-tape"></div>
+      <div class="frame-img frame-bg-1">🌙</div>
+      <div class="frame-caption">Teravih dönüşü<br>sokaklardaki fener ışıkları</div>
+    </div>
+    <div class="frame" onclick="showMemory(1)">
+      <div class="frame-tape"></div>
+      <div class="frame-img frame-bg-2">👴🏻</div>
+      <div class="frame-caption">Dedenin elini öpüp<br>harçlık almak</div>
+    </div>
+    <div class="frame" onclick="showMemory(2)">
+      <div class="frame-tape"></div>
+      <div class="frame-img frame-bg-3">🍬</div>
+      <div class="frame-caption">Cepte erimiş<br>akide şekeri</div>
+    </div>
+    <div class="frame" onclick="showMemory(3)">
+      <div class="frame-tape"></div>
+      <div class="frame-img frame-bg-4">👗</div>
+      <div class="frame-caption">Yeni bayramlık giysinin<br>o taze kokusu</div>
+    </div>
+  </div>
+
+  <!-- Candy jar -->
+  <div class="candy-section">
+    <h3 class="candy-title">
+      Bayram Şekerliği
+      <small>Tıklayarak şeker al!</small>
+    </h3>
+    <div class="jar-wrapper" onclick="pickCandy(event)">
+      <svg class="jar-svg" viewBox="0 0 140 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- jar body -->
+        <path d="M30 60 Q20 70 20 90 L20 155 Q20 165 30 168 L110 168 Q120 165 120 155 L120 90 Q120 70 110 60 Z" fill="#e8d5b0" stroke="#c8a46e" stroke-width="2.5"/>
+        <!-- jar shine -->
+        <path d="M35 75 Q30 90 32 115" stroke="rgba(255,255,255,0.5)" stroke-width="4" stroke-linecap="round"/>
+        <!-- candies inside -->
+        <circle cx="55" cy="130" r="10" fill="#e74c3c" opacity="0.85"/>
+        <circle cx="75" cy="145" r="9"  fill="#f39c12" opacity="0.85"/>
+        <circle cx="95" cy="132" r="8"  fill="#2ecc71" opacity="0.85"/>
+        <circle cx="65" cy="148" r="7"  fill="#9b59b6" opacity="0.85"/>
+        <circle cx="48" cy="145" r="8"  fill="#3498db" opacity="0.85"/>
+        <circle cx="87" cy="150" r="7"  fill="#e74c3c" opacity="0.85"/>
+        <!-- jar neck -->
+        <rect x="40" y="48" width="60" height="16" rx="4" fill="#d4b896" stroke="#c8a46e" stroke-width="2"/>
+        <!-- lid -->
+        <rect x="34" y="38" width="72" height="14" rx="6" fill="#c8a46e" stroke="#a07840" stroke-width="2"/>
+        <rect x="52" y="34" width="36" height="8"  rx="4" fill="#a07840"/>
+      </svg>
+      <div class="candy-count" id="candyCount">Henüz şeker almadın 🙂</div>
+    </div>
+  </div>
+
+  <!-- Greeting button -->
+  <div class="greet-section" style="margin-top: 60px;">
+    <button class="greet-btn" onclick="openGreeting()">✉ Bayram Tebriği Gönder</button>
+  </div>
+
+  <p class="scroll-hint">↓ aşağı kaydır</p>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-divider"></div>
+    <p>Bayramınız mübarek olsun</p>
+    <p style="font-size:0.75rem; margin-top:4px; letter-spacing:2px;">✦ GEÇMIŞTEN GELEN SEVGİYLE ✦</p>
+    <div class="footer-divider"></div>
+  </footer>
+
+</div>
+
+<!-- Modal overlay -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── FIREFLIES ──
+const ffField = document.getElementById('ffField');
+for (let i = 0; i < 28; i++) {
+  const ff = document.createElement('div');
+  ff.className = 'ff';
+  const size = Math.random() * 6 + 3;
+  ff.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    --dx:${(Math.random()-0.5)*200}px;
+    --dy:${(Math.random()-0.5)*200}px;
+    animation-duration:${Math.random()*8+5}s;
+    animation-delay:${Math.random()*6}s;
+  `;
+  ffField.appendChild(ff);
+}
+
+// ── CANDY JAR ──
+const candies = ['🍬','🍭','🍫','🍡','🧁','🍩','🍪','🎁'];
+const messages = [
+  'Afiyet olsun! 🌙', 'Tatlıdan tatlı bir bayram! 🌺',
+  'Hayırlı bayramlar! ✨', 'Şekerler gibi tatlı günler! 🍬',
+  'Bereket içinde geçsin! 🤲', 'Bayramın kutlu olsun! 🎉'
+];
+let candyCount = 0;
+
+function pickCandy(e) {
+  candyCount++;
+  const el = document.getElementById('candyCount');
+  el.textContent = `${candyCount} şeker aldın! ${candies[candyCount % candies.length]}`;
+
+  // Pop 5 candies outward
+  for (let i = 0; i < 5; i++) {
+    const pop = document.createElement('div');
+    pop.className = 'candy-pop';
+    pop.textContent = candies[Math.floor(Math.random() * candies.length)];
+    const angle = Math.random() * 360;
+    const dist  = 80 + Math.random() * 120;
+    pop.style.cssText = `
+      left:${e.clientX}px; top:${e.clientY}px;
+      --cx:${Math.cos(angle*Math.PI/180)*dist}px;
+      --cy:${Math.sin(angle*Math.PI/180)*dist - 60}px;
+      --cr:${(Math.random()-0.5)*360}deg;
+      animation-duration:${0.8+Math.random()*0.5}s;
+      animation-delay:${i*0.06}s;
+    `;
+    document.body.appendChild(pop);
+    pop.addEventListener('animationend', () => pop.remove());
+  }
+
+  if (candyCount === 5) {
+    openModal(`
+      <div class="big-emoji">🎉</div>
+      <h2>Çok Şeker Yidin!</h2>
+      <div class="divider">✦ ✦ ✦</div>
+      <p>${messages[Math.floor(Math.random()*messages.length)]}<br><br>
+      Bayramda şeker yemek serbesttir 😄</p>
+    `);
+  }
+}
+
+// ── MEMORY FRAMES ──
+const memories = [
+  {
+    emoji: '🌙',
+    title: 'Gece Fenerleri',
+    text: 'Teravih namazından dönerken sokaklar sanki başka bir şehre dönüşürdü. Minarelerden sarkan mahyalar, ellerinde fener tutan çocuklar… O gecenin kokusu bir türlü unutulmuyor.'
+  },
+  {
+    emoji: '🤲',
+    title: 'El Öpme',
+    text: 'Dedenin elini öpmek için sıraya girerdik. O sıcak, nasırlaşmış eller… Bir gülümseme, bir dua ve harçlık. O anın kıymeti ancak büyüyünce anlaşılıyor.'
+  },
+  {
+    emoji: '🍬',
+    title: 'Akide Şekeri',
+    text: 'Ceplerde erimiş şekerler, ev ev gezip toplananlar, anneannenin çekmecesinden çıkan o renkli şeker kutularıydı bayramın en tatlı anları. Şimdi bile o tatlı kokuyu hatırlıyoruz.'
+  },
+  {
+    emoji: '👗',
+    title: 'Bayramlık Koku',
+    text: 'Bayram sabahı anneannenin diktiği ya da marketten alınan yeni kıyafeti giymek… O kıyafetin yeni kumaş kokusu ve aynanın karşısındaki o gülümseme hâlâ canlı.'
+  }
+];
+
+function showMemory(i) {
+  const m = memories[i];
+  openModal(`
+    <div class="big-emoji">${m.emoji}</div>
+    <h2>${m.title}</h2>
+    <div class="divider">~ ✦ ~</div>
+    <p>${m.text}</p>
+  `);
+}
+
+// ── GREETING MODAL ──
+function openGreeting() {
+  launchConfetti();
+  openModal(`
+    <div class="big-emoji">✉️</div>
+    <h2>Bayramınız Mübarek Olsun</h2>
+    <div class="divider">✦ ✦ ✦</div>
+    <p>
+      Sevdiklerinizin yanında,<br>
+      sağlık ve huzur içinde geçen<br>
+      nice <strong>bayramlara</strong>…<br><br>
+      <em>Geçmişin sıcaklığı,<br>geleceğin umuduyla birleşsin.</em>
+    </p>
+    <div class="divider" style="margin-top:16px">❧ ❧ ❧</div>
+  `);
+}
+
+// ── MODAL HELPERS ──
+function openModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+}
+document.getElementById('overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── CONFETTI ──
+function launchConfetti() {
+  const colors = ['#c0392b','#d4a017','#2ecc71','#3498db','#9b59b6','#e67e22'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const shape = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-20px;
+      background:${color};
+      border-radius:${shape};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      --cfx:${(Math.random()-0.5)*200}px;
+      --cfr:${Math.random()*720}deg;
+      animation-duration:${1.5+Math.random()*1.5}s;
+      animation-delay:${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(c);
+    c.addEventListener('animationend', () => c.remove());
+  }
+}
+</script>
+</body>
+</html>
